@@ -1,4 +1,4 @@
-import TMDBLib from './TMDBLib';
+import TMDBLib from './lib/TMDBLib';
 
 interface getTMDBLibInstanceParams {
   apiKey?: string;

@@ -6,7 +6,6 @@
       "dom"
     ],
     "strict": true,
-    "rootDir": "lib",
     "outDir": "dist",
     "declaration": true,
     "resolveJsonModule": true,
