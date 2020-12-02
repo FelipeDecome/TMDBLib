@@ -1,5 +1,5 @@
 # TMDBLib
-The movie database library for NodeJS. 
+The movie database library for NodeJS.
 
 ## instalation
 ```bash
@@ -9,12 +9,12 @@ The movie database library for NodeJS.
 #### You can use your <strong>api key</strong> or your <strong>api token</strong>
 ```js
   import getTMDBLib from 'tmdblib';
-  
+
   const tmdb = getTMDBLib({
     apiKey: 'YOUR_API_KEY',
     apiToken: 'YOUR_API_TOKEN',
   })
-  
+
   const movies = await tmdb.findMovies({
     query: Harry Potter,                // Required - A text to search.
     language: en-US,                    // Optional - The language to display translated data(default en-US)
@@ -24,7 +24,7 @@ The movie database library for NodeJS.
     year: number,                       // Optional
     primary_release_year: number,       // Optional
   });
-  
+
   // id: string;
   const harryPotterMovie = await tmdb.getMovie(id);
 ```
