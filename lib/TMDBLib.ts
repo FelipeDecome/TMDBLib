@@ -4,6 +4,7 @@ import getAxiosInstance from './services/api';
 import IGetMovieResponse from './responses/IGetMovieResponse';
 import IFindMoviesResponse from './responses/IFindMoviesResponse';
 import IFindMoviesDTO from './dtos/IFindMoviesDTO';
+import TMDBLibError from './errors/TMDBLibError';
 
 interface ITMDBLibContructorParams {
   apiKey?: string;
@@ -18,6 +19,9 @@ class TMDBLib {
   private api: AxiosInstance;
 
   constructor({ apiKey, apiToken }: ITMDBLibContructorParams) {
+    if (!apiKey && !apiToken)
+      throw new TMDBLibError('Api key or api token must be informed.');
+
     this.apiKey = apiKey;
     this.Authorization = !apiKey && apiToken ? `Bearer ${apiToken}` : '';
 
@@ -27,35 +31,36 @@ class TMDBLib {
   public async findMovie(
     queryParams: IFindMoviesDTO,
   ): Promise<IFindMoviesResponse> {
-    try {
-      const { data } = await this.api.get<IFindMoviesResponse>(
-        '/search/movie',
-        {
-          params: { ...queryParams, api_key: this.apiKey },
-          headers: {
-            Authorization: this.Authorization,
-          },
-        },
-      );
-      return data;
-    } catch (err) {
-      throw new Error(err);
-    }
+    const {
+      data,
+      status,
+      statusText,
+    } = await this.api.get<IFindMoviesResponse>('/search/movie', {
+      params: { ...queryParams, api_key: this.apiKey },
+      headers: {
+        Authorization: this.Authorization,
+      },
+    });
+
+    if (status !== 200) throw new TMDBLibError(statusText, 'TMDB', status);
+
+    return data;
   }
 
   public async getMovie(id: string): Promise<IGetMovieResponse> {
-    try {
-      const { data } = await this.api.get<IGetMovieResponse>(`/movie/${id}`, {
+    const { data, status, statusText } = await this.api.get<IGetMovieResponse>(
+      `/movie/${id}`,
+      {
         params: { api_key: this.apiKey },
         headers: {
           Authorization: this.Authorization,
         },
-      });
+      },
+    );
 
-      return data;
-    } catch (err) {
-      throw new Error(err);
-    }
+    if (status !== 200) throw new TMDBLibError(statusText, 'TMDB', status);
+
+    return data;
   }
 }
 
